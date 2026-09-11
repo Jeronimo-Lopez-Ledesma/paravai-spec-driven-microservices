@@ -25,7 +25,44 @@ El contrato de concurrencia exige que el cliente lea y envíe la revisión. Un c
 
 ## Verificación
 
-Pendiente de completar con los resultados observados de la ejecución de Maven y de la integración HTTP/Mongo. La existencia de pruebas no equivale a haberlas superado.
+**Resultado observado: GATE 1 PASS.**
+
+La ejecución [34655100114](https://github.com/Jeronimo-Lopez-Ledesma/paravai-spec-driven-microservices/actions/runs/34655100114), sobre la implementación del commit `d61d0894fac23209e9418b72a2f44bcbba261993`, terminó con BUILD SUCCESS el 11 de septiembre de 2026. Utilizó Java 21 (Temurin 21.0.12), Spring Boot 3.5.16 y MongoDB 8.0.30 arrancado con el Compose del repositorio.
+
+Comando ejecutado: `mvn -B -ntp -Pintegration clean verify`. Se compiló y empaquetó el JAR ejecutable del servicio.
+
+| Grupo | Pruebas | Fallos | Errores | Omitidas |
+| --- | ---: | ---: | ---: | ---: |
+| Dominio | 15 | 0 | 0 | 0 |
+| Aplicación | 9 | 0 | 0 | 0 |
+| HTTP con repositorio en memoria | 25 | 0 | 0 | 0 |
+| ArchUnit | 6 | 0 | 0 | 0 |
+| HTTP/MongoDB reales | 5 | 0 | 0 | 0 |
+| **Total de pruebas distintas** | **60** | **0** | **0** | **0** |
+
+La integración comprueba:
+
+1. Crear, leer y actualizar mediante HTTP, inspeccionando también el documento persistido.
+2. Rechazar escrituras sin permiso, con revisión obsoleta o reglas inválidas, conservando el documento.
+3. Responder 404 sin insertar comunidades inexistentes.
+4. Resolver dos peticiones HTTP competidoras con un 200 y un 409, conservando una única nueva revisión.
+5. Rechazar en MongoDB una segunda escritura construida a partir de la misma revisión, incluso sin depender de la comprobación previa de la aplicación.
+
+Las seis reglas ArchUnit verifican dependencias del dominio y la aplicación, separación de adaptadores, uso de puertos y ausencia de dependencia de adaptadores respecto a la implementación del servicio.
+
+El workflow verifica también de forma explícita `mvn clean verify` sin MongoDB, antes de arrancar Compose, y después `mvn -Pintegration verify`. Esta segunda invocación vuelve a ejecutar las 55 pruebas normales y añade las 5 de integración: no deben sumarse ambas invocaciones como pruebas distintas.
+
+Los informes XML están en `communities-service/target/surefire-reports/` y `communities-service/target/failsafe-reports/`; Actions los conserva en el artefacto `gate-1-test-reports`.
+
+## Incidencias encontradas
+
+- Una etiqueta de MongoDB anunciada como binario todavía no estaba publicada como imagen Docker. El primer intento de CI falló antes de Maven. Se fijó la imagen publicada `mongo:8.0.30` y el siguiente arranque y verificación completos pasaron.
+- El entorno local perdió la conexión durante la preparación de la verificación; la compilación inicial había pasado. La ejecución completa se realizó en GitHub Actions con Docker y MongoDB reales.
+- Actions avisó de la retirada de Node 20 para acciones v4. El workflow se actualizó a las acciones v5, que usan Node 24.
+- Spring Test/Mockito emite un aviso de instrumentación dinámica en Java 21. No provoca fallos ni se oculta; las pruebas de aplicación utilizan dobles escritos a mano. El log de indisponibilidad de persistencia procede de una prueba que fuerza ese error y espera 503.
+- La limitación de soporte de Spring Boot 3.5 permanece expresamente documentada. No se han desactivado pruebas ni configurado opciones para ignorar sus fallos.
+
+El pase de este gate acredita las tres operaciones y su baseline técnica; no acredita autenticación de producción, rendimiento o tolerancia a fallos distribuida.
 
 ## Estructura e inventario
 

@@ -9,21 +9,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
           cache: maven
+      - name: Verify baseline without MongoDB
+        run: mvn -B -ntp clean verify
       - name: Start MongoDB
         run: docker compose up -d --wait
       - name: Verify unit, architecture and HTTP/Mongo tests
         env:
           MONGODB_TEST_URI: mongodb://127.0.0.1:27017
-        run: mvn -B -ntp -Pintegration clean verify
+        run: mvn -B -ntp -Pintegration verify
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: gate-1-test-reports
           path: |
