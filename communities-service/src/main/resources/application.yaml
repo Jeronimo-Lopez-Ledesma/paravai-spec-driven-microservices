@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: communities-service
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://127.0.0.1:27017/communities?serverSelectionTimeoutMS=2000&connectTimeoutMS=2000}
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+      fail-on-numbers-for-enums: true
+      accept-float-as-int: false
+  webflux:
+    problemdetails:
+      enabled: true
+
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${SERVER_PORT:8080}
+
+paravai:
+  demo:
+    users: ${DEMO_USERS:alice,bob}
