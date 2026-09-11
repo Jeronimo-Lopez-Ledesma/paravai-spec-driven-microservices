@@ -4,7 +4,7 @@ Baseline backend del TFM: un único microservicio, `communities-service`, con cr
 
 ## Stack
 
-Java 21, Spring Boot 3.5.16, Spring WebFlux/Reactor, Spring Data Reactive MongoDB, Maven, JUnit 5 y ArchUnit 1.4.1. MongoDB local: 8.0.32.
+Java 21, Spring Boot 3.5.16, Spring WebFlux/Reactor, Spring Data Reactive MongoDB, Maven, JUnit 5 y ArchUnit 1.4.1. MongoDB local: 8.0.30.
 
 Se fija Spring Boot 3.5.16 para mantener la combinación con JUnit 5. Es la última versión comunitaria de la rama 3.5, cuyo soporte OSS ha terminado; no se presenta como una baseline de producción con soporte vigente. Véase la [nota oficial de la versión](https://spring.io/blog/2026/06/25/spring-boot-3-5-16-available-now/).
 
