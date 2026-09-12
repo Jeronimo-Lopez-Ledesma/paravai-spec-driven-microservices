@@ -39,11 +39,13 @@ No se atribuirá al generador la resolución de problemas inherentes a la distri
 | Communities | Conservar modelo, contratos, identidad de demostración, invariantes y control de revisión existentes |
 | Offers | Crear, consultar por ID, listar activas por comunidad, pausar y retirar; estados ACTIVE, PAUSED y WITHDRAWN |
 | Distribución | Dos servicios ejecutables por separado, propiedad de datos separada y una dependencia REST de Offers hacia Communities |
-| Persistencia | MongoDB reactivo, una única base de aplicación local y colecciones propiedad de cada servicio. Ningún servicio accede a las colecciones del otro; se mantiene el aislamiento temporal de las bases de prueba |
+| Persistencia | MongoDB reactivo, con una base lógica propia por servicio: `communities` para `communities-service` y `offers` para `offers-service`. Una única instancia MongoDB puede alojar ambas en desarrollo local; se mantiene el aislamiento temporal de las bases de prueba |
 | Generación | CLI Python, un formato de especificación YAML, una versión inicial de esquema y un único perfil Java/Spring/WebFlux/MongoDB |
 | Arquitectura | Dominio sólo Java, puertos explícitos y separación REST/persistencia; reglas de negocio manuales |
 | Evaluación | Dos casos, pruebas automatizadas, regeneración, repetibilidad, inventario generado/manual y esfuerzo registrado; resultados y límites en la memoria |
 | Entrega | Código, especificaciones, comandos de reproducción, evidencias, memoria y material de defensa conforme a los requisitos académicos que se confirmen |
+
+Cada servicio es propietario exclusivo de su base lógica. Ningún servicio accede directamente a la base ni a las colecciones del otro; la comunicación entre contextos se realiza exclusivamente mediante sus contratos. Compartir la instancia MongoDB en desarrollo local no implica compartir una base lógica ni requiere dos servidores MongoDB o dos contenedores.
 
 | ID | Operación | Situación al planificar |
 | --- | --- | --- |
@@ -95,7 +97,7 @@ La estrategia propuesta separa ficheros propiedad del generador de ficheros manu
 
 ### 3.3 Won't Have en este TFM
 
-Quedan fuera: un tercer Bounded Context; Membership; Resource como agregado independiente; Exchange/Trading; Reputation; Disputes; Notifications; frontend; OAuth o identidad de producción; Kafka, gRPC, Eureka, Gateway, Redis/Valkey, CQRS y Outbox; transacciones distribuidas, sagas, reintentos complejos y consistencia global; Kubernetes o despliegue de producción; múltiples bases de datos de aplicación, otros motores o persistencia políglota; otros lenguajes de runtime; generador Java alternativo, varios perfiles del generador, plugins, editor visual, LLM en generación o reglas de negocio generadas. El aislamiento efímero de las pruebas MongoDB aceptadas no añade otra base de aplicación al producto.
+Quedan fuera: un tercer Bounded Context; Membership; Resource como agregado independiente; Exchange/Trading; Reputation; Disputes; Notifications; frontend; OAuth o identidad de producción; Kafka, gRPC, Eureka, Gateway, Redis/Valkey, CQRS y Outbox; transacciones distribuidas, sagas, reintentos complejos y consistencia global; Kubernetes o despliegue de producción; otros motores de bases de datos o persistencia políglota; otros lenguajes de runtime; generador Java alternativo, varios perfiles del generador, plugins, editor visual, LLM en generación o reglas de negocio generadas. El aislamiento efímero de las pruebas MongoDB aceptadas no añade otra base de aplicación al producto.
 
 También quedan fuera observabilidad o pruebas de carga como líneas de trabajo independientes, búsqueda avanzada, listados distintos del listado activo por comunidad, edición de ofertas, reactivación, borrado físico y negociación. Pause, Withdraw y el listado comprometido sí forman parte del alcance.
 
