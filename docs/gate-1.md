@@ -27,9 +27,9 @@ El contrato de concurrencia exige que el cliente lea y envíe la revisión. Un c
 
 **Resultado observado: GATE 1 PASS.**
 
-La ejecución [34655100114](https://github.com/Jeronimo-Lopez-Ledesma/paravai-spec-driven-microservices/actions/runs/34655100114), sobre la implementación del commit `d61d0894fac23209e9418b72a2f44bcbba261993`, terminó con BUILD SUCCESS el 11 de septiembre de 2026. Utilizó Java 21 (Temurin 21.0.12), Spring Boot 3.5.16 y MongoDB 8.0.30 arrancado con el Compose del repositorio.
+La ejecución [34655443399](https://github.com/Jeronimo-Lopez-Ledesma/paravai-spec-driven-microservices/actions/runs/34655443399), activada por `push` con `head_sha` igual a `33a1b5956e14caec6b18f1794f816cce1def2a0b`, terminó con estado `completed` y conclusión `success` el 11 de septiembre de 2026. Utilizó Java 21 (Temurin 21.0.12), Spring Boot 3.5.16 y MongoDB 8.0.30 arrancado con el Compose del repositorio.
 
-Comando ejecutado: `mvn -B -ntp -Pintegration clean verify`. Se compiló y empaquetó el JAR ejecutable del servicio.
+Comandos ejecutados: `mvn -B -ntp clean verify` y, tras arrancar MongoDB mediante `docker compose up -d --wait`, `mvn -B -ntp -Pintegration verify`. Ambas invocaciones de Maven terminaron con BUILD SUCCESS. Se compiló y empaquetó el JAR ejecutable del servicio.
 
 | Grupo | Pruebas | Fallos | Errores | Omitidas |
 | --- | ---: | ---: | ---: | ---: |
