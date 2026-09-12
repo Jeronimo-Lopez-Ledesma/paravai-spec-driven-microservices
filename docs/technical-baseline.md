@@ -9,8 +9,8 @@ Esta baseline establece el punto inicial técnico del desarrollo formal del TFM.
 | Java | Java 21; compilación con `release 21` | `java.version` del POM raíz |
 | Spring Boot | **4.1.1**, versión estable | Parent `spring-boot-starter-parent:4.1.1` |
 | Spring Framework / WebFlux | **7.0.9** | BOM de Spring Boot 4.1.1 |
-| Reactor | BOM **2025.0.7**; API reactiva `Mono`/`Flux` y servidor Reactor Netty | BOM de Spring Boot 4.1.1 |
-| Spring Data | BOM **2026.0.1**, soporte MongoDB reactivo | BOM de Spring Boot 4.1.1 |
+| Reactor | Core **3.8.7**, Netty **1.3.7**; BOM **2025.0.7** | BOM de Spring Boot 4.1.1 |
+| Spring Data MongoDB | **5.1.1**, mediante el BOM Spring Data **2026.0.1** | BOM de Spring Boot 4.1.1 |
 | Driver MongoDB | **5.8.1**, Reactive Streams | BOM de Spring Boot 4.1.1 |
 | MongoDB local | **8.0.30** | Imagen `mongo:8.0.30` en Compose |
 | JSON | Jackson **3.1.5** | BOM de Spring Boot 4.1.1 |
@@ -77,7 +77,21 @@ CI verifica los informes de las cinco suites y exige **cero failures, errors y s
 
 ### Evidencia de aceptación
 
-Pendiente de registrar la ejecución satisfactoria correspondiente a esta baseline. El perfil sólo se acepta cuando la suite completa y la comprobación de informes han terminado correctamente.
+**TECHNICAL BASELINE PASS.**
+
+La ejecución [34685729446](https://github.com/Jeronimo-Lopez-Ledesma/paravai-spec-driven-microservices/actions/runs/34685729446), activada por `push`, tiene como `head_sha` exactamente el commit [`2185393aeb3189d3b91a8b4d4761976a91aae8b8`](https://github.com/Jeronimo-Lopez-Ledesma/paravai-spec-driven-microservices/commit/2185393aeb3189d3b91a8b4d4761976a91aae8b8). Terminó con estado `completed` y conclusión `success` el 12 de septiembre de 2026.
+
+| Verificación ejecutada | Resultado observado |
+| --- | --- |
+| `mvn -B -ntp clean verify`, sin MongoDB | BUILD SUCCESS; 55 pruebas, 0 failures/errors/skipped |
+| `docker compose up -d --wait` | MongoDB 8.0.30 arrancado y healthy |
+| `mvn -B -ntp -Pintegration verify` | BUILD SUCCESS; 55 pruebas normales y 5 de HTTP/MongoDB real, 0 failures/errors/skipped |
+| Comprobación de informes | Cinco suites presentes y completas; **60 pruebas distintas**, **0 failures**, **0 errors**, **0 skipped** |
+| Perfil de dependencias resuelto | Coincide con las versiones indicadas en la tabla tecnológica |
+
+El entorno observado utilizó Maven **3.9.16** y Java **21.0.12.1**, de Eclipse Adoptium. El artefacto `technical-baseline-evidence` conserva los informes, `technical-baseline-results.json` con el SHA y los totales, `build-environment.txt` y `dependency-tree.txt`.
+
+Queda aceptada y congelada la combinación **Java 21 / Spring Boot 4.1.1 / WebFlux 7.0.9 / Reactor 3.8.7 / Spring Data Reactive MongoDB 5.1.1 con servidor MongoDB 8.0.30** como perfil tecnológico de los siguientes sprints y del diseño del generador. Esta aceptación acredita las tres operaciones y los criterios técnicos descritos, sin extender su alcance funcional.
 
 ## Estructura
 
