@@ -1,14 +1,15 @@
 spring:
   application:
     name: communities-service
-  data:
-    mongodb:
-      uri: ${MONGODB_URI:mongodb://127.0.0.1:27017/communities?serverSelectionTimeoutMS=2000&connectTimeoutMS=2000}
+  mongodb:
+    uri: ${MONGODB_URI:mongodb://127.0.0.1:27017/communities?serverSelectionTimeoutMS=2000&connectTimeoutMS=2000}
   jackson:
     deserialization:
       fail-on-unknown-properties: true
-      fail-on-numbers-for-enums: true
       accept-float-as-int: false
+    datatype:
+      enum:
+        fail-on-numbers-for-enums: true
   webflux:
     problemdetails:
       enabled: true

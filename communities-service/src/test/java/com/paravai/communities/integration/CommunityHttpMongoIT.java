@@ -50,8 +50,8 @@ class CommunityHttpMongoIT {
         if (uri == null || uri.isBlank()) {
             throw new IllegalStateException("The integration profile requires MONGODB_TEST_URI pointing to a local test MongoDB");
         }
-        properties.add("spring.data.mongodb.uri", () -> uri);
-        properties.add("spring.data.mongodb.database", () -> DATABASE);
+        properties.add("spring.mongodb.uri", () -> uri);
+        properties.add("spring.mongodb.database", () -> DATABASE);
         properties.add("paravai.demo.users", () -> "alice,bob");
         properties.add("server.address", () -> "127.0.0.1");
     }

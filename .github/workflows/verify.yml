@@ -1,4 +1,4 @@
-name: Gate 1 verification
+name: Technical baseline verification
 on:
   push:
   pull_request:
@@ -23,14 +23,55 @@ jobs:
         env:
           MONGODB_TEST_URI: mongodb://127.0.0.1:27017
         run: mvn -B -ntp -Pintegration verify
-      - name: Upload test reports
+      - name: Require complete reports with no failures, errors or skipped tests
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          expected = {
+              "com.paravai.communities.domain.CommunityTest": 15,
+              "com.paravai.communities.application.CommunityServiceTest": 9,
+              "com.paravai.communities.adapter.in.rest.CommunityHttpTest": 25,
+              "com.paravai.communities.architecture.HexagonalArchitectureTest": 6,
+              "com.paravai.communities.integration.CommunityHttpMongoIT": 5,
+          }
+          target = Path("communities-service/target")
+          suites = {}
+          for report in target.glob("*-reports/TEST-*.xml"):
+              root = ET.parse(report).getroot()
+              counts = {key: int(root.get(key, "0")) for key in ("tests", "failures", "errors", "skipped")}
+              if any(counts[key] for key in ("failures", "errors", "skipped")):
+                  raise SystemExit(f"Unsuccessful test report: {report}: {counts}")
+              suites[root.attrib["name"]] = counts
+          for name, minimum in expected.items():
+              if suites.get(name, {}).get("tests", 0) < minimum:
+                  raise SystemExit(f"Missing or incomplete baseline suite: {name}")
+          result = {"commit": os.environ["GITHUB_SHA"], "suites": suites,
+                    "totals": {key: sum(s[key] for s in suites.values())
+                               for key in ("tests", "failures", "errors", "skipped")}}
+          (target / "technical-baseline-results.json").write_text(json.dumps(result, indent=2) + "\n")
+          print(json.dumps(result, indent=2))
+          PY
+      - name: Record resolved technology profile
+        run: |
+          mvn -version > communities-service/target/build-environment.txt
+          mvn -B -ntp -pl communities-service dependency:tree > communities-service/target/dependency-tree.txt
+          cat communities-service/target/build-environment.txt
+          cat communities-service/target/dependency-tree.txt
+      - name: Upload baseline evidence
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: gate-1-test-reports
+          name: technical-baseline-evidence
           path: |
             communities-service/target/surefire-reports/
             communities-service/target/failsafe-reports/
+            communities-service/target/technical-baseline-results.json
+            communities-service/target/build-environment.txt
+            communities-service/target/dependency-tree.txt
       - name: Stop MongoDB
         if: always()
         run: docker compose down -v

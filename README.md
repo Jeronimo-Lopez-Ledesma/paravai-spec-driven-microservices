@@ -1,12 +1,12 @@
-# Paravai: Gate 1
+# Paravai: Final Technical Baseline
 
-Baseline backend del TFM: un único microservicio, `communities-service`, con creación, consulta por ID y actualización de reglas de comunidades.
+Punto inicial técnico del TFM: un único microservicio, `communities-service`, con creación, consulta por ID y actualización de reglas de comunidades.
 
 ## Stack
 
-Java 21, Spring Boot 3.5.16, Spring WebFlux/Reactor, Spring Data Reactive MongoDB, Maven, JUnit 5 y ArchUnit 1.4.1. MongoDB local: 8.0.30.
+Perfil tecnológico: Java 21, Spring Boot **4.1.1**, Spring WebFlux/Reactor, Spring Data Reactive MongoDB, Maven, JUnit Jupiter **6.0.3** y ArchUnit **1.5.0** mediante `archunit-junit6`. MongoDB local: **8.0.30**.
 
-Se fija Spring Boot 3.5.16 para mantener la combinación con JUnit 5. Es la última versión comunitaria de la rama 3.5, cuyo soporte OSS ha terminado; no se presenta como una baseline de producción con soporte vigente. Véase la [nota oficial de la versión](https://spring.io/blog/2026/06/25/spring-boot-3-5-16-available-now/).
+Spring Boot 4.1.1 es una versión estable publicada en Maven Central. Su BOM determina las versiones de Spring Framework 7, Reactor, Spring Data, el driver MongoDB y Jackson 3. La combinación Java/Spring Boot/WebFlux/MongoDB constituye el perfil tecnológico definitivo para los siguientes sprints y para el diseño del generador. Las versiones no se actualizan de forma implícita. Véanse la [nota oficial de la versión](https://spring.io/blog/2026/08/20/spring-boot-4-1-1-available-now) y las [decisiones de la baseline](docs/technical-baseline.md).
 
 ## Arranque local
 
@@ -84,4 +84,4 @@ El perfil de integración exige `MONGODB_TEST_URI`; si falta o MongoDB no está 
 
 Un agregador Maven y un módulo ejecutable. El dominio usa únicamente Java; la aplicación depende del dominio y de Reactor mediante puertos explícitos; los adaptadores REST y MongoDB se conectan en la configuración Spring. Las reglas ArchUnit se ejecutan en el ciclo normal de Maven.
 
-La estructura completa, el inventario de archivos y el resultado del gate se documentan en [docs/gate-1.md](docs/gate-1.md).
+El perfil congelado, la estructura y las evidencias de verificación se documentan en [docs/technical-baseline.md](docs/technical-baseline.md). CI exige cero fallos, errores y pruebas omitidas, y conserva los informes junto al árbol de dependencias resuelto.
